@@ -3,7 +3,7 @@ import os
 def get_train_options():
     opt = {}
 
-    opt['project_dir'] = "/mnt/beegfs/haolin/PUGAN-pytorch"
+    opt['project_dir'] = "/home/Hayakawa/PUGAN-pytorch"
     opt['model_save_dir'] = opt['project_dir'] + '/checkpoints'
     opt["test_save_dir"]=opt['project_dir'] + '/test_results'
     opt['test_log_dir']=opt['project_dir'] + '/log_results'

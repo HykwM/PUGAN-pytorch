@@ -1,0 +1,5 @@
+Patches_noHole_and_collected.h5
+*.out
+__pycache__
+checkpoint*
+model*
