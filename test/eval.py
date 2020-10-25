@@ -24,7 +24,7 @@ import numpy as np
 from data.data_loader import PUNET_Dataset
 from chamfer_distance import chamfer_distance
 from auction_match import auction_match
-import pointnet2.utils.pointnet2_utils as pn2_utils
+import pointnet2.pointnet2_utils as pn2_utils
 import importlib
 from network.networks import Generator
 from option.train_option import get_train_options

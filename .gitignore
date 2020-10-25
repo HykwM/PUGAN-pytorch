@@ -3,3 +3,10 @@ Patches_noHole_and_collected.h5
 __pycache__
 checkpoint*
 model*
+*.o
+*.off
+dist
+*.so
+*.bz2
+*.zip
+outputs

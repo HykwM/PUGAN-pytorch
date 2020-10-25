@@ -33,7 +33,7 @@ COPY pointnet2/ /src/
 WORKDIR /src
 RUN pip install -r requirements.txt 
 RUN python setup.py install
-RUN pip install --upgrade https://github.com/unlimblue/KNN_CUDA/releases/download/0.2/KNN_CUDA-0.2-py3-none-any.whl 
+#RUN pip install --upgrade https://github.com/unlimblue/KNN_CUDA/releases/download/0.2/KNN_CUDA-0.2-py3-none-any.whl 
 
 # Fix sudo
 RUN echo 'Defaults env_keep += "PATH"' >> /etc/sudoers \

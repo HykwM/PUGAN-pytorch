@@ -14,6 +14,19 @@
             "subProcess": true,
             "args": ["--exp_name=debug", "--gpu=1", "--use_gan", "--batch_size=12"],
             "cwd": "/home/Hayakawa/PUGAN-pytorch/train"
+        },
+        {
+            "name": "Python: Test",
+            "type": "python",
+            "request": "launch",
+            "program": "/home/Hayakawa/PUGAN-pytorch/test/test.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "subProcess": true,
+            "args": [
+                "--exp_name=debug", "--gpu=0", "--resume", "/home/Hayakawa/PUGAN-pytorch/checkpoints/debug/G_iter_99.pth" 
+            ],
+            "cwd": "/home/Hayakawa/PUGAN-pytorch/test"
         }
     ]
 }
