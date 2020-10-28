@@ -86,8 +86,8 @@ def train(args):
             optimizer_G.zero_grad()
             optimizer_D.zero_grad()
 
-            input_data=input_data[:,:,0:3].permute(0,2,1).float().cuda()
-            gt_data=gt_data[:,:,0:3].permute(0,2,1).float().cuda()
+            input_data=input_data[:,:,0:3].permute(0,2,1).float().cuda()    #[12, 3, 1024]<-[12, 1024, 6]
+            gt_data=gt_data[:,:,0:3].permute(0,2,1).float().cuda()  #[12, 3, 4096]
 
             start_t_batch=time.time()
             output_point_cloud=G_model(input_data)

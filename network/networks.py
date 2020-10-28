@@ -21,14 +21,14 @@ class get_edge_feature(nn.Module):
         self.KNN=KNN(k=k+1,transpose_mode=False)
         self.k=k
     def forward(self,point_cloud):
-        dist,idx=self.KNN(point_cloud,point_cloud)
+        dist,idx=self.KNN(point_cloud,point_cloud)  #[BS, k+1, n_points], [BS, k+1, n_points]
         '''
         idx is batch_size,k,n_points
         point_cloud is batch_size,n_dims,n_points
         point_cloud_neightbors is batch_size,n_dims,k,n_points
         '''
         idx=idx[:,1:,:]
-        point_cloud_neighbors=grouping_operation(point_cloud,idx.contiguous().int())
+        point_cloud_neighbors=grouping_operation(point_cloud,idx.contiguous().int())    #[batch_size,n_dims,k,n_points] <- [batch_size,n_dims,n_points],[batch_size,k,n_points]
         point_cloud_central=point_cloud.unsqueeze(2).repeat(1,1,self.k,1)
         #print(point_cloud_central.shape,point_cloud_neighbors.shape)
         edge_feature=torch.cat([point_cloud_central,point_cloud_neighbors-point_cloud_central],dim=1)
@@ -61,7 +61,7 @@ class denseconv(nn.Module):
         '''
         y should be batch_size,in_channel,k,n_points
         '''
-        y,idx=self.edge_feature_model(input)
+        y,idx=self.edge_feature_model(input)    #[batch_size,out_channel,k,n_points],[batch_size,k,n_points] <- [batch_size,in_channel,n_points]
         inter_result=torch.cat([self.conv1(y),y],dim=1) #concat on feature dimension
         inter_result=torch.cat([self.conv2(inter_result),inter_result],dim=1)
         inter_result=torch.cat([self.conv3(inter_result),inter_result],dim=1)

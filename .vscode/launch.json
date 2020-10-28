@@ -5,14 +5,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Current File",
+            "name": "Python: Train",
             "type": "python",
             "request": "launch",
             "program": "/home/Hayakawa/PUGAN-pytorch/train/train.py",
             "console": "integratedTerminal",
-            "justMyCode": false,
+            "justMyCode": true,
             "subProcess": true,
-            "args": ["--exp_name=debug", "--gpu=1", "--use_gan", "--batch_size=12"],
+            "args": ["--exp_name=debug", "--gpu=1", "--use_gan", "--batch_size=12", "--debug"],
             "cwd": "/home/Hayakawa/PUGAN-pytorch/train"
         },
         {

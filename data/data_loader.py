@@ -45,20 +45,20 @@ class PUNET_Dataset(data.Dataset):
         self.use_norm = use_norm
 
         h5_file = h5py.File(h5_file_path)
-        self.gt = h5_file['poisson_4096'][:]  # [:] h5_obj => nparray
+        self.gt = h5_file['poisson_4096'][:]  # [:] h5_obj => nparray   (4000, 4096, 6)
         self.input = h5_file['poisson_4096'][:] if use_random \
-            else h5_file['montecarlo_1024'][:]
+            else h5_file['montecarlo_1024'][:]  #(4000, 4096, 6)
         assert len(self.input) == len(self.gt), 'invalid data'
-        self.data_npoint = self.input.shape[1]
+        self.data_npoint = self.input.shape[1]  #4096
 
-        centroid = np.mean(self.gt[..., :3], axis=1, keepdims=True)
-        furthest_distance = np.amax(np.sqrt(np.sum((self.gt[..., :3] - centroid) ** 2, axis=-1)), axis=1, keepdims=True)
-        self.radius = furthest_distance[:, 0]  # not very sure?
+        centroid = np.mean(self.gt[..., :3], axis=1, keepdims=True) #(4000, 1, 3)
+        furthest_distance = np.amax(np.sqrt(np.sum((self.gt[..., :3] - centroid) ** 2, axis=-1)), axis=1, keepdims=True)    #(4000, 1)
+        self.radius = furthest_distance[:, 0]  # not very sure?(4000,)
 
         if use_norm:
-            self.radius = np.ones(shape=(len(self.input)))
-            self.gt[..., :3] -= centroid
-            self.gt[..., :3] /= np.expand_dims(furthest_distance, axis=-1)
+            self.radius = np.ones(shape=(len(self.input)))  #(4000,)
+            self.gt[..., :3] -= centroid    #(4000, 4096, 6)
+            self.gt[..., :3] /= np.expand_dims(furthest_distance, axis=-1)    #(4000, 4096, 6)
             self.input[..., :3] -= centroid
             self.input[..., :3] /= np.expand_dims(furthest_distance, axis=-1)
 
