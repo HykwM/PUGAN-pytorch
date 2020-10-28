@@ -7,6 +7,7 @@ from knn_cuda import KNN
 from pointnet2.pointnet2_utils import gather_operation,grouping_operation
 import torch.nn.functional as F
 from torch.autograd import Variable
+from network.splat import SplAtconv2d as splat
 
 class get_edge_feature(nn.Module):
     """construct edge feature for each point
@@ -217,7 +218,7 @@ class up_block(nn.Module):
             nn.ReLU()
         )
         self.grid=torch.tensor(self.gen_grid(up_ratio)).cuda()
-        self.attention_unit=attention_unit(in_channels=in_channels)
+        self.attention_unit=splat(in_channels,in_channels,1)
     def forward(self,inputs):
         net=inputs #b,128,n
         grid=self.grid.clone()
@@ -228,10 +229,10 @@ class up_block(nn.Module):
         net=net.repeat(1,self.up_ratio,1)#b,4n,128
         net = torch.cat([net, grid], dim=2)  # b,n*4,130
 
-        net=net.permute(0,2,1)#b,130,n*4
+        #net=net.permute(0,2,1)#b,130,n*4
 
         net=self.attention_unit(net)
-
+        net=net.permute(1,2,0)#b,130,n*4
         net=self.conv1(net)
         net=self.conv2(net)
 
@@ -359,15 +360,18 @@ class Discriminator(nn.Module):
         self.params=params
         self.start_number=32
         self.mlp_conv1=mlp_conv(in_channels=in_channels,layer_dim=[self.start_number, self.start_number * 2])
-        self.attention_unit=attention_unit(in_channels=self.start_number*4)
+        self.attention_unit=splat(self.start_number*4,self.start_number*4,1)
         self.mlp_conv2=mlp_conv(in_channels=self.start_number*4,layer_dim=[self.start_number*4,self.start_number*8])
         self.mlp=mlp(in_channels=self.start_number*8,layer_dim=[self.start_number * 8, 1])
     def forward(self,inputs):
         features=self.mlp_conv1(inputs)
         features_global=torch.max(features,dim=2)[0] ##global feature
-        features=torch.cat([features,features_global.unsqueeze(2).repeat(1,1,features.shape[2])],dim=1)
+        features = torch.cat([features, features_global.unsqueeze(2).repeat(1, 1, features.shape[2])], dim=1)
+        
+        features = features.permute(0, 2, 1)
         features=self.attention_unit(features)
-
+        features = features.permute(1,2,0)
+        
         features=self.mlp_conv2(features)
         features=torch.max(features,dim=2)[0]
 
